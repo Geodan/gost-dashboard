@@ -1,6 +1,6 @@
 {
-  "name": "Gost Dashboard",
-  "short_name": "Gost Dashboard",
+  "name": "My App",
+  "short_name": "My App",
     "icons": [{
       "src": "images/app-icon-32.png",
       "type": "image/png",

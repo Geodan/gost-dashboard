@@ -1,112 +1,153 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-item/paper-item-body.html">
+<link rel="import" href="../bower_components/paper-item/paper-icon-item.html">
+
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="my-icons.html">
 
 <link rel="import" href="./gost-config.html">
-<link rel="import" href="./bower_components/polymer/polymer.html">
-<link rel="import" href="./bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="./bower_components/iron-swipeable-container/iron-swipeable-container.html">
-<link rel="import" href="./bower_components/paper-drawer-panel/paper-drawer-panel.html">
-<link rel="import" href="./bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="./bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
-<link rel="import" href="./bower_components/paper-card/paper-card.html">
-<link rel="import" href="./bower_components/paper-button/paper-button.html">
-<link rel="import" href="./bower_components/paper-fab/paper-fab.html">
-<link rel="import" href="./bower_components/paper-tabs/paper-tab.html">
-<link rel="import" href="./bower_components/paper-tabs/paper-tabs.html">
-<link rel="import" href="./bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="./bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="./bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="./bower_components/iron-icons/maps-icons.html">
-<link rel="import" href="./bower_components/iron-icons/image-icons.html">
-<link rel="import" href="./bower_components/iron-icons/notification-icons.html">
-<link rel="import" href="./bower_components/iron-icons/communication-icons.html">
-<link rel="import" href="./bower_components/iron-selector/iron-selector.html">
-<link rel="import" href="./bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="./bower_components/iron-ajax/iron-ajax.html">
 
-<link rel="import" href="./bower_components/neon-animation/neon-animation.html">
-<link rel="import" href="./bower_components/paper-toolbar/paper-toolbar.html">
-<link rel="import" href="./bower_components/paper-drawer-panel/paper-drawer-panel.html">
-<link rel="import" href="./bower_components/paper-listbox/paper-listbox.html">
-<link rel="import" href="./bower_components/paper-item/paper-item.html">
-<link rel="import" href="./bower_components/paper-item/paper-item-body.html">
-<link rel="import" href="./bower_components/paper-item/paper-icon-item.html">
-<link rel="import" href="./bower_components/paper-card/paper-card.html">
-<link rel="import" href="./bower_components/paper-material/paper-material.html">
-<link rel="import" href="./bower_components/paper-toast/paper-toast.html">
-<link rel="import" href="./bower_components/paper-scroll-header-panel/paper-scroll-header-panel.html">
-<link rel="import" href="./bower_components/paper-header-panel/paper-header-panel.html">
-<link rel="import" href="./gost-things.html">
-<link rel="import" href="./gost-locations.html">
+<dom-module id="my-app">
 
-<dom-module id="gost-main">
-    <template>
-    <style include="iron-flex iron-flex-alignment"></style>
+  <template>
+
     <style>
-    .darkgreen {
+
+      :host {
+        display: block;
+        --app-primary-color: #4285f4;
+        --app-secondary-color: black;
+      }
+
+      app-header {
+        background-color: var(--app-primary-color);
+        color: #fff;
+      }
+      app-header paper-icon-button {
+        --paper-icon-button-ink-color: white;
+      }
+
+      .drawer-list {
+        margin: 0 20px;
+      }
+      .drawer-list a {
+        display: block;
+        padding: 0 16px;
+        line-height: 40px;
+        text-decoration: none;
+        color: var(--app-secondary-color);
+      }
+      .drawer-list a.iron-selected {
+        color: black;
+        font-weight: bold;
+      }
+      .drawer-list a.subroute {
+        padding-left: 32px;
+      }
+      
+      .darkgreen {
         background: #2A3F54;
         color: white;
-    }
-    paper-icon-item {
-    	cursor: pointer;
-    }
-    
+	   }
+		paper-icon-item {
+			cursor: pointer;
+}
+
+
     </style>
-        <!-- NON UI -->
-        <gost-config
 
-            ></gost-config>
-        <entity-repo id='repo'></entity-repo>
-        <!-- UI -->
-        <paper-drawer-panel>
-            <div drawer class='layout vertical darkgreen'>
-                <paper-toolbar>
-                    <paper-icon-item>
-                      <iron-icon src='./icon.svg' item-icon></iron-icon>
-                      <paper-item-body two-line>
-                          <div>GOST</div>
-                          <div secondary>Dashboard</div>
-                      </paper-item-body>
-                    </paper-icon-item>
+    <app-location route="{{route}}"></app-location>
+    <app-route
+        route="{{route}}"
+        pattern="/:page"
+        data="{{routeData}}"
+        tail="{{subroute}}"></app-route>
 
-        	 	</paper-toolbar>
-                 <paper-listbox attr-for-selected="name" selected="{{selected}}" class='darkgreen'>
-                    <template is='dom-repeat' items=[[menuitems]]>
-                        <paper-icon-item name='[[item.name]]'><iron-icon icon="[[item.icon]]" item-icon></iron-icon>[[item.name]]</paper-icon-item>
-                    </template>
-                </paper-listbox>
-                <paper-icon-item><iron-icon icon="mail" item-icon></iron-icon>MQTT</paper-icon-item>
-            </div>
-            <div  main  style='height:100%'>
-                <paper-header-panel>
-                    <paper-toolbar>
-                		<paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
-                		<div class='title'>[[selected]]</div>
-                	</paper-toolbar>
-                    <div id="mainpanel" class='layout horizontal' style='height:100%;'>
-                        <iron-pages main class='content fit pages' attr-for-selected="name" selected="{{selected}}"
-                			entry-animation="fade-in-animation" exit-animation="fade-out-animation">
-                            <div name='Home'>Home</div>
-                            <gost-things name='Things'></gost-things>
-                            <gost-locations name='Locations'></gost-locations>
-                            <div name='Historical Locations'>Historical Locations</div>
-                            <div name='Sensors'>Sensors</div>
-                            <div name='Observed Properties'>Observed Properties</div>
-                            <div name='Datastreams'>Datastreams</div>
-                            <div name='Observations'>Observations</div>
-                            <div name='Features Of Interest'>Features Of Interest</div>
-                            
-                        </iron-pages>
-                    </div>
-                </paper-header-panel>
-            </div>
-        </paper-drawer-panel>
-    </template>
-    </dom-module>
+    <app-drawer-layout fullbleed>
 
-<script>
+      <!-- Drawer content -->
+      <app-drawer>
+        <app-toolbar>
+        	<paper-icon-item>
+			  <iron-icon src='./icon.svg' item-icon></iron-icon>
+			  <paper-item-body two-line>
+				  <div>GOST</div>
+				  <div secondary>Dashboard</div>
+			  </paper-item-body>
+			</paper-icon-item></app-toolbar>
+        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+          <template is='dom-repeat' items=[[menuitems]]>
+              <paper-icon-item name='[[item.name]]'><iron-icon icon="[[item.icon]]" item-icon></iron-icon>
+               <a href="/[[item.name]]">[[item.name]]</a>
+              </paper-icon-item>
+          </template>
+          <paper-icon-item><iron-icon icon="mail" item-icon></iron-icon>
+          	<a href="/mqtt">MQTT</a>
+          </paper-icon-item>
+        </iron-selector>
+      </app-drawer>
 
-Polymer({
-    is: 'gost-main',
-    properties: {
+      <!-- Main content -->
+      <app-header-layout has-scrolling-region>
+
+        <app-header condenses reveals effects="waterfall">
+          <app-toolbar>
+            <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
+            <div title>[[page]]</div>
+          </app-toolbar>
+        </app-header>
+
+        <iron-pages role="main" selected="[[page]]" attr-for-selected="name">
+			<div name='Home'>Home</div>
+			<gost-things name='Things'></gost-things>
+			<gost-locations name='Locations'></gost-locations>
+			<div name='Historical Locations'>Historical Locations</div>
+			<div name='Sensors'>Sensors</div>
+			<div name='Observed Properties'>Observed Properties</div>
+			<div name='Datastreams'>Datastreams</div>
+			<div name='Observations'>Observations</div>
+			<div name='Features Of Interest'>Features Of Interest</div>
+        </iron-pages>
+
+      </app-header-layout>
+
+    </app-drawer-layout>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'my-app',
+
+      properties: {
+
+        page: {
+          type: String,
+          reflectToAttribute: true,
+          observer: '_pageChanged'
+        },
         menuitems: {
             type: Array,
             value: function(){
@@ -123,15 +164,25 @@ Polymer({
                 ];
             }
         }
-    },
-    ready: function(){
-        var self = this;
 
-    },
-    attached: function(){
+      },
 
-    }
+      observers: [
+        '_routePageChanged(routeData.page)'
+      ],
 
+      _routePageChanged: function(page) {
+        this.page = page || 'view1';
+      },
 
-});
-</script>
+      _pageChanged: function(page) {
+        // load page import on demand.
+        this.importHref(
+          this.resolveUrl('my-' + page + '.html'), null, null, true);
+      }
+
+    });
+
+  </script>
+
+</dom-module>
