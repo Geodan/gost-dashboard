@@ -3,11 +3,11 @@
 <link rel="import" href="../bower_components/gost-elements/gost-rest.html">
 <link rel="import" href="../bower_components/gost-elements/gost-table.html">
 
-<dom-module id="gost-locations">
+<dom-module id="gost-historicallocations">
     <template>
 
     <gost-rest auto id='locationsrequest'
-        requesturl='http://gost.geodan.nl/v1.0/Locations'
+        requesturl='http://gost.geodan.nl/v1.0/HistoricalLocations'
         resultarray='{{locationsarray}}'
     ></gost-rest>
     
@@ -21,7 +21,7 @@
 <script>
 
 Polymer({
-    is: 'gost-locations',
+    is: 'gost-historicallocations',
     properties: {
         
     },

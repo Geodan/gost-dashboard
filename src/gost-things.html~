@@ -1,59 +1,20 @@
-<link rel="import" href="./bower_components/polymer/polymer.html">
-<link rel="import" href="./bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="./bower_components/iron-swipeable-container/iron-swipeable-container.html">
-<link rel="import" href="./bower_components/paper-drawer-panel/paper-drawer-panel.html">
-<link rel="import" href="./bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="./bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
-<link rel="import" href="./bower_components/paper-item/paper-item.html">
-<link rel="import" href="./bower_components/paper-card/paper-card.html">
-<link rel="import" href="./bower_components/paper-button/paper-button.html">
-<link rel="import" href="./bower_components/paper-fab/paper-fab.html">
-<link rel="import" href="./bower_components/paper-tabs/paper-tab.html">
-<link rel="import" href="./bower_components/paper-tabs/paper-tabs.html">
-<link rel="import" href="./bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="./bower_components/iron-icons/maps-icons.html">
-<link rel="import" href="./bower_components/iron-selector/iron-selector.html">
-<link rel="import" href="./bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="./bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
 
-<link rel="import" href="./bower_components/neon-animation/neon-animation.html">
-<link rel="import" href="./bower_components/paper-toolbar/paper-toolbar.html">
-<link rel="import" href="./bower_components/paper-drawer-panel/paper-drawer-panel.html">
-<link rel="import" href="./bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="./bower_components/paper-listbox/paper-listbox.html">
-<link rel="import" href="./bower_components/paper-item/paper-item.html">
-<link rel="import" href="./bower_components/paper-item/paper-item-body.html">
-<link rel="import" href="./bower_components/paper-item/paper-icon-item.html">
-<link rel="import" href="./bower_components/paper-card/paper-card.html">
-<link rel="import" href="./bower_components/paper-material/paper-material.html">
-<link rel="import" href="./bower_components/paper-toast/paper-toast.html">
-<link rel="import" href="./bower_components/paper-scroll-header-panel/paper-scroll-header-panel.html">
-<link rel="import" href="./bower_components/paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../bower_components/gost-elements/gost-rest.html">
+<link rel="import" href="../bower_components/gost-elements/gost-table.html">
 
 <dom-module id="gost-things">
     <template>
-    <style include="iron-flex iron-flex-alignment"></style>
 
-    <iron-ajax auto id='thingsrequest'
-        url='{{thingsurl}}'
-        handle-as="json"
-        last-response={{thingsarray}}
-    ></iron-ajax>
-    <!-- TODO: List page and detail page -->
-        <table>
-            <tr>
-            <th>ID</th>
-            <th>Description</th>
-            <th>Properties</th>
-            </tr>
-        <template is="dom-repeat" items=[[thingsarray.value]]>
-            <tr>
-            <td>[[item.@iot.id]]</td>
-            <td>[[item.description]]</td>
-            <td>[[stringify(item.properties)]]</td>
-            </tr>
-        </template>
-        </table>
+    <gost-rest auto id='thingsrequest'
+        requesturl='http://gost.geodan.nl/v1.0/Things'
+        resultarray='{{thingsarray}}'
+    ></gost-rest>
+    
+    <gost-table id='thingstable'
+    	resultarray='[[thingsarray]]'>
+    </gost-table>
+    
     </template>
 </dom-module>
 
@@ -62,19 +23,10 @@
 Polymer({
     is: 'gost-things',
     properties: {
-        things: {
-            type: Array
-        },
-        thingsurl: {
-            type: String,
-            value: '/gost-service/Things'
-        }
+        
     },
     ready: function(){
 
-    },
-    stringify:function(data){
-        return JSON.stringify(data);
     }
 
 });

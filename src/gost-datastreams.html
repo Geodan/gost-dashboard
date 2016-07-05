@@ -3,16 +3,16 @@
 <link rel="import" href="../bower_components/gost-elements/gost-rest.html">
 <link rel="import" href="../bower_components/gost-elements/gost-table.html">
 
-<dom-module id="gost-locations">
+<dom-module id="gost-datastreams">
     <template>
 
-    <gost-rest auto id='locationsrequest'
-        requesturl='http://gost.geodan.nl/v1.0/Locations'
-        resultarray='{{locationsarray}}'
+    <gost-rest auto id='request'
+        requesturl='http://gost.geodan.nl/v1.0/Datastreams'
+        resultarray='{{resultarray}}'
     ></gost-rest>
     
-    <gost-table id='locationstable'
-    	resultarray='[[locationsarray]]'>
+    <gost-table id='table'
+    	resultarray='[[resultarray]]'>
     </gost-table>
     
     </template>
@@ -21,7 +21,7 @@
 <script>
 
 Polymer({
-    is: 'gost-locations',
+    is: 'gost-datastreams',
     properties: {
         
     },
