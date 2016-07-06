@@ -20,6 +20,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-item/paper-item-body.html">
 <link rel="import" href="../bower_components/paper-item/paper-icon-item.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-icons/maps-icons.html">
+<link rel="import" href="../bower_components/iron-icons/image-icons.html">
+<link rel="import" href="../bower_components/iron-icons/notification-icons.html">
+<link rel="import" href="../bower_components/iron-icons/communication-icons.html">
 
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
@@ -27,7 +33,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="./gost-config.html">
 
-<dom-module id="my-app">
+<dom-module id="gost-main">
 
   <template>
 
@@ -76,12 +82,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     </style>
 
-    <app-location route="{{route}}"></app-location>
+    <app-location use-hash-as-path route="{{route}}"></app-location>
+    
     <app-route
-        route="{{route}}"
-        pattern="/:page"
-        data="{{routeData}}"
-        tail="{{subroute}}"></app-route>
+		route="{{route}}"
+		pattern="/:page"
+		data="{{routeData}}"
+		tail="{{subroute}}">
+	</app-route>
+	<app-route
+		route="{{subroute}}"
+		pattern="/:id"
+		data="{{subrouteData}}">
+	</app-route>
 
     <app-drawer-layout fullbleed>
 
@@ -89,17 +102,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <app-drawer>
         <app-toolbar>
         	<paper-icon-item>
-			  <iron-icon src='./icon.svg' item-icon></iron-icon>
+			  <iron-icon src='../images/app-icon.svg' item-icon></iron-icon>
 			  <paper-item-body two-line>
 				  <div>GOST</div>
 				  <div secondary>Dashboard</div>
-			  </paper-item-body>
+			  </paper-item-body>     
 			</paper-icon-item></app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <template is='dom-repeat' items=[[menuitems]]>
-              <paper-icon-item name='[[item.name]]'><iron-icon icon="[[item.icon]]" item-icon></iron-icon>
-               <a href="/[[item.name]]">[[item.name]]</a>
+          <template is='dom-repeat' items='[[menuitems]]'>
+              <a href="#/[[item.ref]]">
+              <paper-icon-item name='[[item.ref]]'>
+              	<iron-icon icon="[[item.icon]]" item-icon></iron-icon>
+              	[[item.name]]
               </paper-icon-item>
+              </a>
           </template>
           <paper-icon-item><iron-icon icon="mail" item-icon></iron-icon>
           	<a href="/mqtt">MQTT</a>
@@ -113,24 +129,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <app-header condenses reveals effects="waterfall">
           <app-toolbar>
             <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
-            <div title>[[page]]</div>
+            <div title>id? [[idActive]] [[page]]</div>
           </app-toolbar>
         </app-header>
 
         <iron-pages role="main" selected="[[page]]" attr-for-selected="name">
-			<div name='Home'>Home</div>
-			<gost-things name='Things'></gost-things>
-			<gost-locations name='Locations'></gost-locations>
-			<div name='Historical Locations'>Historical Locations</div>
-			<div name='Sensors'>Sensors</div>
-			<div name='Observed Properties'>Observed Properties</div>
-			<div name='Datastreams'>Datastreams</div>
-			<div name='Observations'>Observations</div>
-			<div name='Features Of Interest'>Features Of Interest</div>
+			<div name='home'>Home</div>
+			<gost-things name='things'></gost-things>
+			<gost-locations name='locations'></gost-locations>
+			<gost-historicallocations name='historicallocations'></gost-historicallocations>
+			<gost-sensors name='sensors'></gost-sensors>
+			<gost-observedproperties name='observedproperties'></gost-observedproperties>
+			<gost-datastreams name='datastreams'></gost-datastreams>
+			<gost-observations name='observations'></gost-observations>
+			<gost-foi name='foi'></gost-foi>
+			<gost-mqtt name='mqtt'></gost-mqtt>
+			
+			<gost-thing name='thing'></gost-thing>
+			
         </iron-pages>
-
       </app-header-layout>
-
     </app-drawer-layout>
 
   </template>
@@ -139,7 +157,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     Polymer({
 
-      is: 'my-app',
+      is: 'gost-main',
 
       properties: {
 
@@ -148,37 +166,55 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           reflectToAttribute: true,
           observer: '_pageChanged'
         },
+        id: {
+        	type: Number,
+        	reflectToAttribute: true,
+        	observer: '_idChanged'
+        },
         menuitems: {
             type: Array,
             value: function(){
                 return [
-                {name: 'Home', icon: 'icons:home'},
-                {name: 'Things', icon: 'icons:toll'},
-                {name: 'Locations', icon:'communication:location-on' },
-                {name: 'Historical Locations', icon: 'icons:update'},
-                {name: 'Sensors', icon: 'notification:network-check'},
-                {name: 'Observed Properties', icon: 'icons:list'},
-                {name: 'Datastreams', icon: 'icons:trending-up'},
-                {name: 'Observations', icon: 'image:remove-red-eye'},
-                {name: 'Features of Interest', icon: 'maps:map'}
+                {ref: 'home',name: 'Home', icon: 'home'},
+                {ref: 'things',name: 'Things', icon: 'icons:toll'},
+                {ref: 'locations',name: 'Locations', icon:'communication:location-on' },
+                {ref: 'historicallocations',name: 'Historical Locations', icon: 'icons:update'},
+                {ref: 'sensors',name: 'Sensors', icon: 'notification:network-check'},
+                {ref: 'observedproperties',name: 'Observed Properties', icon: 'icons:list'},
+                {ref: 'datastreams',name: 'Datastreams', icon: 'icons:trending-up'},
+                {ref: 'observations',name: 'Observations', icon: 'image:remove-red-eye'},
+                {ref: 'foi',name: 'Features of Interest', icon: 'maps:map'}
                 ];
             }
         }
 
       },
-
+      
       observers: [
-        '_routePageChanged(routeData.page)'
+        '_routePageChanged(routeData.page)',
+        '_routeIdChanged(subrouteData.id)',
       ],
+      ready: function(){
+      	  var self = this;
+      	  this.addEventListener('page-change',function(d){
+      	  		  console.log(d.detail);
+      	  });
+      },
 
       _routePageChanged: function(page) {
-        this.page = page || 'view1';
+        this.page = page || 'home';
+      },
+      _routeIdChanged: function(id) {
+        this.id = id || null;
       },
 
       _pageChanged: function(page) {
         // load page import on demand.
         this.importHref(
-          this.resolveUrl('my-' + page + '.html'), null, null, true);
+          this.resolveUrl('gost-' + page + '.html'), null, null, true);
+      },
+      _idChanged: function(id){
+      	  console.log('id is ' ,id);
       }
 
     });

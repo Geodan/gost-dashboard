@@ -12,8 +12,7 @@
     ></gost-rest>
     
     <gost-table id='locationstable'
-    	resultarray='[[locationsarray]]'
-    	columns='[[columns]]'>
+    	resultarray='[[locationsarray]]'>
     </gost-table>
     
     </template>
@@ -24,15 +23,7 @@
 Polymer({
     is: 'gost-historicallocations',
     properties: {
-     columns: {
-        	type: Array,
-        	value: function() {
-        		return [
-        			{title: 'ID',key: '@iot.id',type: Number},
-        			{title: 'Time',key: 'time',type: String}
-        		];
-        	}
-        }   
+        
     },
     ready: function(){
 

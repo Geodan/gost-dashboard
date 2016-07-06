@@ -2,6 +2,7 @@
 
 <link rel="import" href="../bower_components/gost-elements/gost-rest.html">
 <link rel="import" href="../bower_components/gost-elements/gost-table.html">
+<link rel="import" href="../bower_components/gost-elements/gost-map.html">
 
 <dom-module id="gost-locations">
     <template>
@@ -14,6 +15,11 @@
     <gost-table id='locationstable'
     	resultarray='[[locationsarray]]'
     	columns='[[columns]]'>
+    </gost-table>
+    
+    <gost-map id='locationmap'
+    	resultarray='[[locationsarray]]'
+    	>
     </gost-table>
     
     </template>

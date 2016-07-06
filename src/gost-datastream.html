@@ -1,0 +1,119 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/gost-elements/gost-rest.html">
+<link rel="import" href="../bower_components/gost-elements/gost-table.html">
+<link rel="import" href="../bower_components/gost-elements/gost-chart.html">
+
+<dom-module id="gost-datastream">
+    <template>
+
+    <gost-rest auto 
+        requesturl='[[thingurl]]'
+        resultarray='{{thing}}'
+    ></gost-rest>
+    <gost-rest auto 
+        requesturl='[[sensorurl]]'
+        resultarray='{{sensor}}'
+    ></gost-rest>
+    <gost-rest auto 
+        requesturl='[[observationsurl]]'
+        resultarray='{{observations}}'
+    ></gost-rest>
+    <gost-rest auto 
+        requesturl='[[observedpropertyurl]]'
+        resultarray='{{observedproperty}}'
+    ></gost-rest>
+    
+    <paper-tabs selected="{{tab}}">
+	  <paper-tab>Properties</paper-tab>
+	  <paper-tab>Thing</paper-tab>
+	  <paper-tab>Sensor</paper-tab>
+	  <paper-tab>Observations</paper-tab>
+	  <paper-tab>Observed property</paper-tab>
+	</paper-tabs>
+	
+	<iron-pages selected="[[tab]]">
+	  <div>
+	  	<h4>Id:</h4>
+	  	[[getId(stream)]]
+	  	<h4>Description:</h4>
+	  	[[stream.description]]
+	  	<h4>Unit of Measurement:</h4>
+	  	[[stringify(stream.unitOfMeasurement)]]
+	  	<h4>ObservationType</h4>
+	  	[[stream.observationType]]
+	  </div>
+	  <div>
+	  	<h4>Id:</h4>
+	  	[[getId(thing)]]
+	  	<h4>Description:</h4>
+	  	[[thing.description]]
+	  	<h4>Properties:</h4>
+	  	[[stringify(thing.properties)]]
+	  </div>
+	  <div>
+		  <h4>Id:</h4>
+	  	[[getId(observedproperty)]]
+	  	<h4>Name:</h4>
+	  	[[observedproperty.name]]
+	  	<h4>Description:</h4>
+	  	[[observedproperty.description]]
+	  	<h4>Definition:</h4>
+	  	[[observedproperty.definition]]
+	  </div>
+	  <div>
+		  <gost-chart
+		  resultarray='[[observations]]'
+		  ></gost-chart>
+	  </div>
+	  <div>
+	  	<h4>Id:</h4>
+	  	[[getId(sensor)]]
+	  	<h4>Description:</h4>
+	  	[[sensor.description]]
+	  	<h4>encodingType:</h4>
+	  	[[sensor.encodingType]]
+	  	<h4>metadata</h4>
+	  	[[sensor.metadata]]
+	  </div>
+	 </iron-pages>
+   </template>
+</dom-module>
+
+<script>
+
+Polymer({
+    is: 'gost-datastream',
+    properties: {
+        id: {
+        	type: Number
+        },
+        stream: {
+        	type: Object,
+        	observer: '_streamChanged'
+        },
+        tab: {
+        	type: Number,
+        	value: 0
+        }
+    },
+    ready: function(){
+
+    },
+    _streamChanged: function(stream){
+    	this.thingurl = stream['Thing@iot.navigationLink'];
+		this.sensorurl = stream['Sensor@iot.navigationLink'];
+		this.observationsurl = stream['Observations@iot.navigationLink'] + '?$top=40';
+		this.observedpropertyurl = stream['ObservedProperty@iot.navigationLink'];
+	},
+	getId: function(thing){
+		return thing['@iot.id'];
+	},
+	stringify: function(obj){
+		return JSON.stringify(obj);
+	}
+
+});
+</script>

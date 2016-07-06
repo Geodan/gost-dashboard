@@ -1,0 +1,126 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../bower_components/gost-elements/gost-rest.html">
+<link rel="import" href="../bower_components/gost-elements/gost-table.html">
+
+<dom-module id="gost-thing">
+    <template>
+
+    <gost-rest auto 
+        requesturl='[[datastreamsurl]]'
+        resultarray='{{datastreams}}'
+    ></gost-rest>
+    <gost-rest auto 
+        requesturl='[[locationsurl]]'
+        resultarray='{{locations}}'
+    ></gost-rest>
+    <gost-rest auto 
+        requesturl='[[histlocationsurl]]'
+        resultarray='{{histlocations}}'
+    ></gost-rest>
+    
+    <paper-tabs selected="{{tab}}">
+	  <paper-tab>Properties</paper-tab>
+	  <paper-tab>Locations</paper-tab>
+	  <paper-tab>Historical locations</paper-tab>
+	  <paper-tab>Datastreams</paper-tab>
+	</paper-tabs>
+	
+	<iron-pages selected="[[tab]]">
+	  <div>
+	  	<h4>Id:</h4>
+	  	[[getId(thing)]]
+	  	<h4>Description:</h4>
+	  	[[thing.description]]
+	  	<h4>Properties:</h4>
+	  	[[stringify(thing.properties)]]
+	  </div>
+	  <div>
+	  	<gost-table id='locationstable'
+			resultarray='[[locations]]'
+			columns='[[loccolumns]]'>
+		  </gost-table>
+	  </div>
+	  <div>
+		  <gost-table id='histlocationstable'
+			resultarray='[[histlocations]]'
+			columns='[[hlcolumns]]'>
+		  </gost-table>
+	  </div>
+	  <div>
+		  <gost-table id='datastreamstable'
+			resultarray='[[datastreams]]'
+			columns='[[dscolumns]]'>
+		  </gost-table>
+		  
+	  </div>
+	 </iron-pages>
+   </template>
+</dom-module>
+
+<script>
+
+Polymer({
+    is: 'gost-thing',
+    properties: {
+        id: {
+        	type: Number
+        },
+        thing: {
+        	type: Object,
+        	observer: '_thingChanged'
+        },
+        tab: {
+        	type: Number,
+        	value: 0
+        },
+        dscolumns: {
+        	type: Array,
+        	value: function() {
+        		return [
+        			{title: 'ID',key: '@iot.id',type: Number},
+        			{title: 'Description',key: 'description',type: String},
+        			{title: 'Unit of Measurement',key: 'unitOfMeasurement',type: Object},
+        			{title: 'Observationtype',key: 'observationType',type: String},
+        			
+        		];
+        	}
+        },
+        loccolumns: {
+        	type: Array,
+        	value: function() {
+        		return [
+        			{title: 'ID',key: '@iot.id',type: Number},
+        			{title: 'Description',key: 'description',type: String},
+        			{title: 'Encoding',key: 'encodingType',type: String},
+        			{title: 'location',key: 'location',type: Object},
+        		];
+        	}
+        },
+        hlcolumns: {
+        	type: Array,
+        	value: function() {
+        		return [
+        			{title: 'ID',key: '@iot.id',type: Number},
+        			{title: 'Time',key: 'time',type: String}
+        		];
+        	}
+        }
+    },
+    ready: function(){
+
+    },
+    _thingChanged: function(thing){
+    	this.datastreamsurl = thing['Datastreams@iot.navigationLink'];
+		this.histlocationsurl = thing['HistoricalLocations@iot.navigationLink'];
+		this.locationsurl = thing['Locations@iot.navigationLink'];
+	},
+	getId: function(thing){
+		return thing['@iot.id'];
+	},
+	stringify: function(obj){
+		return JSON.stringify(obj);
+	}
+
+});
+</script>

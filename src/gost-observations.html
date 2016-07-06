@@ -12,7 +12,8 @@
     ></gost-rest>
     
     <gost-table id='table'
-    	resultarray='[[resultarray]]'>
+    	resultarray='[[resultarray]]'
+    	columns='[[columns]]'>
     </gost-table>
     
     </template>
@@ -23,7 +24,17 @@
 Polymer({
     is: 'gost-observations',
     properties: {
-        
+        columns: {
+        	type: Array,
+        	value: function() {
+        		return [
+        			{title: 'ID',key: '@iot.id',type: Number},
+        			{title: 'Phenomenontime',key: 'phenomenonTime',type: String},
+        			{title: 'Result',key: 'result',type: Number},
+        			{title: 'Result time',key: 'resultTime',type: String}
+        		];
+        	}
+        }
     },
     ready: function(){
 

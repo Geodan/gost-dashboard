@@ -1,7 +1,9 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
 
 <link rel="import" href="../bower_components/gost-elements/gost-rest.html">
 <link rel="import" href="../bower_components/gost-elements/gost-table.html">
+<link rel="import" href="gost-thing.html">
 
 <dom-module id="gost-things">
     <template>
@@ -10,11 +12,17 @@
         requesturl='http://gost.geodan.nl/v1.0/Things'
         resultarray='{{thingsarray}}'
     ></gost-rest>
-    
+
     <gost-table id='thingstable'
     	resultarray='[[thingsarray]]'
     	columns='[[columns]]'>
     </gost-table>
+    
+    <iron-collapse id='collapser'>
+		<gost-thing class="collapse-content" id='thingcontainer'
+			thing='[[thing]]'>
+		</gost-thing>
+    </iron-collapse>
     
     </template>
 </dom-module>
@@ -33,11 +41,17 @@ Polymer({
         			{title: 'Properties',key: 'properties',type: Object}
         		];
         	}
+        },
+        thing: {
+        	type: Object
         }
     },
     ready: function(){
-
+    	var self = this;
+    	this.$.thingstable.addEventListener('item-selected',function(d){
+			  self.thing = d.detail;
+			  self.$.collapser.show();
+      	  });
     }
-
 });
 </script>

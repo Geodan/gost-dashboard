@@ -3,11 +3,11 @@
 <link rel="import" href="../bower_components/gost-elements/gost-rest.html">
 <link rel="import" href="../bower_components/gost-elements/gost-table.html">
 
-<dom-module id="gost-observedproperties">
+<dom-module id="gost-datastreams">
     <template>
 
     <gost-rest auto id='request'
-        requesturl='http://gost.geodan.nl/v1.0/ObservedProperties'
+        requesturl='http://gost.geodan.nl/v1.0/Datastreams'
         resultarray='{{resultarray}}'
     ></gost-rest>
     
@@ -22,7 +22,7 @@
 <script>
 
 Polymer({
-    is: 'gost-observedproperties',
+    is: 'gost-datastreams',
     properties: {
         columns: {
         	type: Array,
@@ -30,8 +30,8 @@ Polymer({
         		return [
         			{title: 'ID',key: '@iot.id',type: Number},
         			{title: 'Description',key: 'description',type: String},
-        			{title: 'Name',key: 'name',type: String},
-        			{title: 'Definition',key: 'definition',type: String}
+        			{title: 'Unit of Measurement',key: 'unitOfMeasurement',type: Object},
+        			{title: 'ObservationType',key: 'observationType',type: Object}
         		];
         	}
         }
