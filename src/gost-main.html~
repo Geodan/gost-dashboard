@@ -118,7 +118,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               </a>
           </template>
           <paper-icon-item><iron-icon icon="mail" item-icon></iron-icon>
-          	<a href="/mqtt">MQTT</a>
+          	<a href="#/mqtt">MQTT</a>
           </paper-icon-item>
         </iron-selector>
       </app-drawer>
@@ -129,7 +129,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <app-header condenses reveals effects="waterfall">
           <app-toolbar>
             <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
-            <div title>id? [[idActive]] [[page]]</div>
+            <div title>[[page]]</div>
           </app-toolbar>
         </app-header>
 
@@ -195,10 +195,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         '_routeIdChanged(subrouteData.id)',
       ],
       ready: function(){
-      	  var self = this;
-      	  this.addEventListener('page-change',function(d){
-      	  		  console.log(d.detail);
-      	  });
+      	  
       },
 
       _routePageChanged: function(page) {
@@ -214,7 +211,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.resolveUrl('gost-' + page + '.html'), null, null, true);
       },
       _idChanged: function(id){
-      	  console.log('id is ' ,id);
+      	  //console.log('id is ' ,id);
       }
 
     });
