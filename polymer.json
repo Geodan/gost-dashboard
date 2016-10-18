@@ -3,7 +3,7 @@
   "shell": "src/gost-main.html",
   "fragments": [
     "src/gost-things.html",
-    "src/gost-locations.html"
+    "src/gost-locations.html",
     "src/gost-datastreams.html",
     "src/gost-foi.html",
     "src/gost-historicallocations.html",
@@ -11,6 +11,6 @@
     "src/gost-locations.html",
     "src/gost-mqtt.html",
     "src/gost-observations.html",
-    "src/gost-sensors.html",
+    "src/gost-sensors.html"
   ]
 }
