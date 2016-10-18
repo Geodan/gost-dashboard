@@ -20,8 +20,10 @@
     
     <iron-collapse id='collapser'>
 		<gost-datastream class="collapse-content" id='streamcontainer'
-			stream='[[stream]]'>
+			stream='[[stream]]'
+			mqttclient='[[mqttclient]]'>
 		</gost-datastream>
+		
     </iron-collapse>
     </template>
 </dom-module>
@@ -42,6 +44,7 @@ Polymer({
         		];
         	}
         }
+        
     },
     ready: function(){
     	var self = this;

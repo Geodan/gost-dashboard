@@ -26,6 +26,15 @@
         resultarray='{{observedproperty}}'
     ></gost-rest>
     
+    <mqtt-connection id="connection"
+	   connected="{{connected}}"
+	   client="[[mqttclient]]"
+	   >
+	   <mqtt-subscription topic="[[getTopic(thing)]]"
+             number-of-messages="10"
+             messages='{{messages}}'></mqtt-subscription>
+    </mqtt-connection>
+    
     <paper-tabs selected="{{tab}}">
 	  <paper-tab>Properties</paper-tab>
 	  <paper-tab>Thing</paper-tab>
@@ -64,6 +73,7 @@
 	  	[[observedproperty.definition]]
 	  </div>
 	  <div>
+	  	Connected: [[connected]]
 		  <gost-chart
 		  resultarray='[[observations]]'
 		  ></gost-chart>
@@ -97,6 +107,11 @@ Polymer({
         tab: {
         	type: Number,
         	value: 0
+        },
+        
+        messages: {
+        	type: Array,
+        	notify: true
         }
     },
     ready: function(){
@@ -111,8 +126,14 @@ Polymer({
 	getId: function(thing){
 		return thing['@iot.id'];
 	},
+	getTopic: function(thing){
+		return 'Datastreams('+this.getId(thing)+')/Observations';
+	},
 	stringify: function(obj){
 		return JSON.stringify(obj);
+	},
+	_messagesChanged: function(messages){
+		debugger;
 	}
 
 });

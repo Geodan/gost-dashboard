@@ -1,0 +1,50 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+
+<dom-module id="gost-mqttlog">
+    <template>
+    Connected: [[connected]]
+    <template is='dom-repeat' items='[[messages]]'>
+    	<div>[[item.message.topic]]</div>
+    </template>
+    
+    <mqtt-connection id="connection"
+	   connected="{{connected}}"
+	   client="[[mqttclient]]"
+	   subscriptions="{{subscriptions}}">
+	  
+	   <mqtt-subscription topic="$SYS/broker/#"
+             number-of-messages="10"
+             messages='{{messages}}'></mqtt-subscription>
+	   
+	   
+	 </mqtt-connection>
+        
+    </template>
+</dom-module>
+
+<script>
+
+Polymer({
+    is: 'gost-mqttlog',
+    properties: {
+    	mqttclient: {
+    		type: Object
+    	},
+        messages: {
+        	type: Array,
+        	observer: '_messagesChanged'
+        }
+    },
+    observers: [
+    	
+    ],
+    ready: function(){
+    	
+    },
+    _messagesChanged: function(messages){
+    	
+    }
+
+});
+</script>
