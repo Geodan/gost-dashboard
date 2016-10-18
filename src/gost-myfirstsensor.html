@@ -1,0 +1,80 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="gost-myfirstsensor">
+    <template>
+    <div>Counter: [[counter]]</div>
+    <div>Published: [[published]]</div>
+    
+    <iron-ajax id='ajaxrequest'
+    	auto
+    	url = "http://gost.geodan.nl/v1.0/Observations"
+    	params = '[[payload]]'
+    	
+    	method = 'GET'
+    	handle-as = "json"
+    	on-response = "_handleresponse"
+    	on-error = "_handleerror"
+    	verbose=true
+    ></iron-ajax>
+    
+    <mqtt-connection id="connection" 
+    	
+	   connected="{{connected}}"
+	   client="[[mqttclient]]"
+	   >
+	  <!--
+	   <mqtt-publish
+        auto
+        retained
+        qos="1"
+        topic="Datastreams(10)/Observations"
+        payload="[[payload]]"
+        published="{{published}}"
+        on-mqtt-publication-published='_onpublished'
+        ></mqtt-publish>
+	   -->
+	 </mqtt-connection>
+        
+    </template>
+</dom-module>
+
+<script>
+
+Polymer({
+    is: 'gost-myfirstsensor',
+    properties: {
+        counter: {
+        	type: Number,
+        	value: 0
+        }
+    },
+    ready: function(){
+    	var self = this;
+    	window.setInterval(function(){
+    		self.counter += 1;
+    		if (self.counter > 10){
+    			self.counter = 0;
+    		}
+    		var now = new Date().toISOString();
+    		self.payload= {
+			  "phenomenonTime": now,
+			  "resultTime" : now,
+			  "result" : self.counter,
+			  "Datastream":{"@iot.id":10}
+			}
+    	},1000);
+    	
+    },
+    _handleresponse: function(e,d){
+    	console.log(e.d);
+    },
+    _handleerror: function(e,d){
+    	console.log(e.d);
+    },
+    _onpublished: function(e,d){
+    	console.log(e.d);
+    }
+
+});
+</script>

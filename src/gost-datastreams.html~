@@ -1,7 +1,9 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
 
 <link rel="import" href="../bower_components/gost-elements/gost-rest.html">
 <link rel="import" href="../bower_components/gost-elements/gost-table.html">
+<link rel="import" href="gost-datastream.html">
 
 <dom-module id="gost-datastreams">
     <template>
@@ -16,6 +18,11 @@
     	columns='[[columns]]'>
     </gost-table>
     
+    <iron-collapse id='collapser'>
+		<gost-datastream class="collapse-content" id='streamcontainer'
+			stream='[[stream]]'>
+		</gost-datastream>
+    </iron-collapse>
     </template>
 </dom-module>
 
@@ -37,8 +44,12 @@ Polymer({
         }
     },
     ready: function(){
-
-    }
+    	var self = this;
+    	this.$.table.addEventListener('item-selected',function(d){
+			  self.stream = d.detail;
+			  self.$.collapser.show();
+      	  });
+    	}
 
 });
 </script>

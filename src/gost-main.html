@@ -31,6 +31,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="my-icons.html">
 
+<link rel="import" href="../bower_components/gost-elements/gost-mqtt.html">
 <link rel="import" href="./gost-config.html">
 
 <dom-module id="gost-main">
@@ -96,6 +97,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 		data="{{subrouteData}}">
 	</app-route>
 
+	<gost-mqtt id='mqtt'
+    	autoconnect
+    	hostname='gost.geodan.nl'
+    	connected='{{connected}}'
+    	client='{{mqttclient}}'
+    	subscriptions='{{subscriptions}}'
+    	on-message='_handleMqttMessage'
+    ></gost-mqtt>
+	
     <app-drawer-layout fullbleed>
 
       <!-- Drawer content -->
@@ -106,6 +116,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			  <paper-item-body two-line>
 				  <div>GOST</div>
 				  <div secondary>Dashboard</div>
+				  
 			  </paper-item-body>     
 			</paper-icon-item></app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
@@ -118,7 +129,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               </a>
           </template>
           <paper-icon-item><iron-icon icon="mail" item-icon></iron-icon>
-          	<a href="/mqtt">MQTT</a>
+          	<a href="/mqttlog">MQTT</a>
+          </paper-icon-item>
+          <paper-icon-item><iron-icon icon="mail" item-icon></iron-icon>
+          	<a href="/myfirstsensor">My first sensor</a>
           </paper-icon-item>
         </iron-selector>
       </app-drawer>
@@ -129,7 +143,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <app-header condenses reveals effects="waterfall">
           <app-toolbar>
             <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
-            <div title>[[page]]</div>
+            <div title>[[page]] [[lastmessage]]</div>
           </app-toolbar>
         </app-header>
 
@@ -140,13 +154,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			<gost-historicallocations name='historicallocations'></gost-historicallocations>
 			<gost-sensors name='sensors'></gost-sensors>
 			<gost-observedproperties name='observedproperties'></gost-observedproperties>
-			<gost-datastreams name='datastreams'></gost-datastreams>
+			<gost-datastreams name='datastreams' mqttclient='[[mqttclient]]'></gost-datastreams>
 			<gost-observations name='observations'></gost-observations>
 			<gost-foi name='foi'></gost-foi>
-			<gost-mqtt name='mqtt'></gost-mqtt>
-			
+			<gost-mqttlog name='mqttlog' mqttclient='[[mqttclient]]'></gost-mqttlog>
+			<gost-myfirstsensor name='myfirstsensor' mqttclient='[[mqttclient]]'></gost-myfirstsensor>
 			<gost-thing name='thing'></gost-thing>
-			
         </iron-pages>
       </app-header-layout>
     </app-drawer-layout>
@@ -186,6 +199,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 {ref: 'foi',name: 'Features of Interest', icon: 'maps:map'}
                 ];
             }
+        },
+        topics: {
+        	type: Array
         }
 
       },
@@ -195,9 +211,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         '_routeIdChanged(subrouteData.id)',
       ],
       ready: function(){
-      	  
       },
-
+      _handleMqttMessage: function(e,message){
+      	  	  //console.log(message);
+      },
       _routePageChanged: function(page) {
         this.page = page || 'home';
       },

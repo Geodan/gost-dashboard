@@ -82,7 +82,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     </style>
 
-    <app-location use-hash-as-path route="{{route}}"></app-location>
+    <app-location route="{{route}}"></app-location>
     
     <app-route
 		route="{{route}}"
@@ -96,6 +96,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 		data="{{subrouteData}}">
 	</app-route>
 
+	<gost-mqtt id='mqtt'
+    	autoconnect
+    	hostname='gost.geodan.nl'
+    	connected='{{connected}}'
+    	topics='[[topics]]'
+    	subscriptions='{{subscriptions}}'
+    	on-message='_handleMqttMessage'
+    	messages='{{messages}}'
+    ></gost-mqtt>
+	
     <app-drawer-layout fullbleed>
 
       <!-- Drawer content -->
@@ -106,11 +116,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			  <paper-item-body two-line>
 				  <div>GOST</div>
 				  <div secondary>Dashboard</div>
+				  
 			  </paper-item-body>     
 			</paper-icon-item></app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
           <template is='dom-repeat' items='[[menuitems]]'>
-              <a href="#/[[item.ref]]">
+              <a href="/[[item.ref]]">
               <paper-icon-item name='[[item.ref]]'>
               	<iron-icon icon="[[item.icon]]" item-icon></iron-icon>
               	[[item.name]]
@@ -118,7 +129,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               </a>
           </template>
           <paper-icon-item><iron-icon icon="mail" item-icon></iron-icon>
-          	<a href="#/mqtt">MQTT</a>
+          	<a href="/mqttlog">MQTT C:[[connected]]</a>
           </paper-icon-item>
         </iron-selector>
       </app-drawer>
@@ -129,7 +140,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <app-header condenses reveals effects="waterfall">
           <app-toolbar>
             <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
-            <div title>[[page]]</div>
+            <div title>[[page]] [[lastmessage]]</div>
           </app-toolbar>
         </app-header>
 
@@ -143,7 +154,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			<gost-datastreams name='datastreams'></gost-datastreams>
 			<gost-observations name='observations'></gost-observations>
 			<gost-foi name='foi'></gost-foi>
-			<gost-mqtt name='mqtt'></gost-mqtt>
+			<gost-mqttlog name='mqttlog' stream='[[mqttstream]]'></gost-mqttlog>
 			
 			<gost-thing name='thing'></gost-thing>
 			
@@ -186,6 +197,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 {ref: 'foi',name: 'Features of Interest', icon: 'maps:map'}
                 ];
             }
+        },
+        topics: {
+        	type: Array
         }
 
       },
@@ -195,9 +209,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         '_routeIdChanged(subrouteData.id)',
       ],
       ready: function(){
-      	  
+      	  this.topics = [
+      	  	{name: "Datastreams(1)/Observations"},
+      	  	{name: "Datastreams(2)/Observations"},
+      	  	{name: "Datastreams(3)/Observations"},
+      	  	{name: "Datastreams(4)/Observations"},
+      	  	{name: "Datastreams(5)/Observations"},
+      	  	{name: "Datastreams(6)/Observations"},
+      	  	{name: "Datastreams(7)/Observations"},
+      	  	{name: "Datastreams(8)/Observations"},
+      	  	{name: "Datastreams(9)/Observations"},
+      	  	{name: "Datastreams(10)/Observations"},
+      	  	{name: "Datastreams(11)/Observations"},
+      	  	{name: "Datastreams(12)/Observations"}
+      	  ];
+      	  window.topics = this.topics;
       },
-
+      _handleMqttMessage: function(e,message){
+      	  console.log(message);
+      },
       _routePageChanged: function(page) {
         this.page = page || 'home';
       },
