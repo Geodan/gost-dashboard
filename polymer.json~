@@ -1,8 +1,0 @@
-{
-  "entrypoint": "index.html",
-  "shell": "src/gost-main.html",
-  "fragments": [
-    "src/gost-things.html",
-    "src/gost-locations.html"
-  ]
-}
