@@ -25,14 +25,12 @@
         resultarray='{{thingsarray}}'
     ></gost-rest>
 
-    <paper-card>
-        <div class="card-content">
-            <gost-table id='thingstable'
-                resultarray='[[thingsarray]]'
-                columns='[[columns]]'>
-            </gost-table>
-        </div>
-    </paper-card>
+    <div class="card-content">
+        <gost-table id='thingstable'
+            resultarray='[[thingsarray]]'
+            columns='[[columns]]'>
+        </gost-table>
+    </div>
 
     <iron-collapse id='collapser'>
 		<gost-thing class="collapse-content" id='thingcontainer'

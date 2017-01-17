@@ -44,10 +44,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --app-primary-color: #4285f4;
         --app-secondary-color: black;
       }
-
+      
       app-drawer app-toolbar {
-        background-color: #202930; 
+        background-color: #202930;
         height: 120px;
+        padding: 0px 0px;
       }
       
       app-header {
@@ -55,7 +56,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: #202930;
         box-shadow: 0px 5px 6px -3px rgba(0, 0, 0, 0.2);
       }
-
+      
       app-drawer {
         --app-drawer-content-container: {
           background-color: #293a42;
@@ -65,15 +66,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       app-header paper-icon-button {
         --paper-icon-button-ink-color: white;
       }
-
+      
       iron-selector paper-icon-item {
-        font-size: 12px;
+        font-size: 14px;
+        font-weight: 500;
       }
-
+      
       iron-pages {
         padding: 20px;
       }
-    
+
+      .page-title {
+        font-size: 30px;
+        font-weight: 500;
+      }
+      
+      .divider1 {
+        margin: 0px 0;
+        border-top: 1px solid #8c8b8b;
+        width: 100%;
+        opacity: 0.2;
+      }
+      
       .drawer-list {
         margin: 0 20px;
       }
@@ -102,18 +116,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       paper-icon-item {
         cursor: pointer;
         color: #fff;
+        opacity: 0.75;
       }
-
-      app-toolbar paper-icon-item{
+      
+      app-toolbar paper-icon-item {
+        color: #fff;
         --paper-item-icon-width: 100px;
       }
-
+      
       .gost-toolbar-icon {
         margin-right: 10px;
         --iron-icon-height: 132px;
         --iron-icon-width: 132px;
       }
-
+      
+      #gost-heading {
+        font-size: 24px;
+        font-weight: 600;
+      }
+      
+      #gost-sub-heading {
+        font-size: 18px;
+        font-weight: 600;
+        color: #ccc;
+      }
     </style>
 
     <app-location route="{{route}}"></app-location>
@@ -134,11 +160,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <paper-icon-item>
             <iron-icon class="gost-toolbar-icon" src='../images/app-icon.svg' item-icon></iron-icon>
             <paper-item-body two-line>
-              <div>GOST</div>
-              <div secondary>DASHBOARD</div>
+              <div id='gost-heading'>GOST</div>
+              <div secondary id='gost-sub-heading'>DASHBOARD</div>
             </paper-item-body>
           </paper-icon-item>
         </app-toolbar>
+        <hr class='divider1'></hr>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
           <template is='dom-repeat' items='[[menuitems]]'>
             <a href="/[[item.ref]]">
@@ -148,14 +175,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               </paper-icon-item>
             </a>
           </template>
-          <paper-icon-item>
-            <iron-icon icon="mail" item-icon></iron-icon>
-            <a href="/mqttlog">MQTT</a>
-          </paper-icon-item>
-          <paper-icon-item>
-            <iron-icon icon="mail" item-icon></iron-icon>
-            <a href="/myfirstsensor">My first sensor</a>
-          </paper-icon-item>
+
+          <a href="/mqttlog">
+            <paper-icon-item name='MQTT'>
+              <iron-icon icon="mail" item-icon></iron-icon>
+              MQTT
+            </paper-icon-item>
+          </a>
+
+          <a href="/myfirstsensor">
+            <paper-icon-item>
+              <iron-icon icon="mail" item-icon></iron-icon>
+              My first sensor
+            </paper-icon-item>
+          </a>
         </iron-selector>
       </app-drawer>
 
@@ -165,7 +198,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <app-header condenses reveals effects="waterfall">
           <app-toolbar>
             <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
-            <div title>[[page]] [[lastmessage]]</div>
+            <div title clas='page-title'>[[page]] [[lastmessage]]</div>
           </app-toolbar>
         </app-header>
 
