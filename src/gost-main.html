@@ -39,24 +39,59 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <template>
 
     <style>
-
       :host {
         display: block;
         --app-primary-color: #4285f4;
         --app-secondary-color: black;
       }
-
-      app-header {
-        background-color: var(--app-primary-color);
-        color: #fff;
+      
+      app-drawer app-toolbar {
+        background-color: #202930;
+        height: 120px;
+        padding: 0px 0px;
       }
+      
+      app-header {
+        background-color: #fff;
+        color: #202930;
+        box-shadow: 0px 5px 6px -3px rgba(0, 0, 0, 0.2);
+      }
+      
+      app-drawer {
+        --app-drawer-content-container: {
+          background-color: #293a42;
+        }
+      }
+      
       app-header paper-icon-button {
         --paper-icon-button-ink-color: white;
       }
+      
+      iron-selector paper-icon-item {
+        font-size: 14px;
+        font-weight: 500;
+      }
+      
+      iron-pages {
+        padding: 20px;
+      }
 
+      .page-title {
+        font-size: 30px;
+        font-weight: 500;
+      }
+      
+      .divider1 {
+        margin: 0px 0;
+        border-top: 1px solid #8c8b8b;
+        width: 100%;
+        opacity: 0.2;
+      }
+      
       .drawer-list {
         margin: 0 20px;
       }
+      
       .drawer-list a {
         display: block;
         padding: 0 16px;
@@ -64,10 +99,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         text-decoration: none;
         color: var(--app-secondary-color);
       }
-      .drawer-list a.iron-selected {
-        color: black;
-        font-weight: bold;
+      
+      .drawer-list a {
+        padding: 0px;
       }
+      
       .drawer-list a.subroute {
         padding-left: 32px;
       }
@@ -75,65 +111,84 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .darkgreen {
         background: #2A3F54;
         color: white;
-	   }
-		paper-icon-item {
-			cursor: pointer;
-}
-
-
+      }
+      
+      paper-icon-item {
+        cursor: pointer;
+        color: #fff;
+        opacity: 0.75;
+      }
+      
+      app-toolbar paper-icon-item {
+        color: #fff;
+        --paper-item-icon-width: 100px;
+      }
+      
+      .gost-toolbar-icon {
+        margin-right: 10px;
+        --iron-icon-height: 132px;
+        --iron-icon-width: 132px;
+      }
+      
+      #gost-heading {
+        font-size: 24px;
+        font-weight: 600;
+      }
+      
+      #gost-sub-heading {
+        font-size: 18px;
+        font-weight: 600;
+        color: #ccc;
+      }
     </style>
 
     <app-location route="{{route}}"></app-location>
-    
-    <app-route
-		route="{{route}}"
-		pattern="/:page"
-		data="{{routeData}}"
-		tail="{{subroute}}">
-	</app-route>
-	<app-route
-		route="{{subroute}}"
-		pattern="/:id"
-		data="{{subrouteData}}">
-	</app-route>
 
-	<gost-mqtt id='mqtt'
-    	autoconnect
-    	hostname='gost.geodan.nl'
-    	connected='{{connected}}'
-    	client='{{mqttclient}}'
-    	subscriptions='{{subscriptions}}'
-    	on-message='_handleMqttMessage'
-    ></gost-mqtt>
-	
+    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}">
+    </app-route>
+    <app-route route="{{subroute}}" pattern="/:id" data="{{subrouteData}}">
+    </app-route>
+
+    <gost-mqtt id='mqtt' autoconnect hostname='gost.geodan.nl' connected='{{connected}}' client='{{mqttclient}}' subscriptions='{{subscriptions}}'
+      on-message='_handleMqttMessage'></gost-mqtt>
+
     <app-drawer-layout fullbleed>
 
       <!-- Drawer content -->
       <app-drawer>
         <app-toolbar>
-        	<paper-icon-item>
-			  <iron-icon src='../images/app-icon.svg' item-icon></iron-icon>
-			  <paper-item-body two-line>
-				  <div>GOST</div>
-				  <div secondary>Dashboard</div>
-				  
-			  </paper-item-body>     
-			</paper-icon-item></app-toolbar>
+          <paper-icon-item>
+            <iron-icon class="gost-toolbar-icon" src='../images/app-icon.svg' item-icon></iron-icon>
+            <paper-item-body two-line>
+              <div id='gost-heading'>GOST</div>
+              <div secondary id='gost-sub-heading'>DASHBOARD</div>
+            </paper-item-body>
+          </paper-icon-item>
+        </app-toolbar>
+        <hr class='divider1'></hr>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
           <template is='dom-repeat' items='[[menuitems]]'>
-              <a href="/[[item.ref]]">
+            <a href="/[[item.ref]]">
               <paper-icon-item name='[[item.ref]]'>
-              	<iron-icon icon="[[item.icon]]" item-icon></iron-icon>
-              	[[item.name]]
+                <iron-icon icon="[[item.icon]]" item-icon></iron-icon>
+                [[item.name]]
               </paper-icon-item>
-              </a>
+            </a>
           </template>
-          <paper-icon-item><iron-icon icon="mail" item-icon></iron-icon>
-          	<a href="/mqttlog">MQTT</a>
-          </paper-icon-item>
-          <paper-icon-item><iron-icon icon="mail" item-icon></iron-icon>
-          	<a href="/myfirstsensor">My first sensor</a>
-          </paper-icon-item>
+
+          <a href="/mqttlog">
+            <paper-icon-item name='MQTT'>
+              <iron-icon icon="mail" item-icon></iron-icon>
+              MQTT
+            </paper-icon-item>
+          </a>
+
+          <a href="/myfirstsensor">
+            <paper-icon-item>
+              <iron-icon icon="mail" item-icon></iron-icon>
+              My first sensor
+            </paper-icon-item>
+          </a>
         </iron-selector>
       </app-drawer>
 
@@ -143,23 +198,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <app-header condenses reveals effects="waterfall">
           <app-toolbar>
             <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
-            <div title>[[page]] [[lastmessage]]</div>
+            <div title clas='page-title'>[[page]] [[lastmessage]]</div>
           </app-toolbar>
         </app-header>
 
         <iron-pages role="main" selected="[[page]]" attr-for-selected="name">
-			<div name='home'>Home</div>
-			<gost-things name='things'></gost-things>
-			<gost-locations name='locations'></gost-locations>
-			<gost-historicallocations name='historicallocations'></gost-historicallocations>
-			<gost-sensors name='sensors'></gost-sensors>
-			<gost-observedproperties name='observedproperties'></gost-observedproperties>
-			<gost-datastreams name='datastreams' mqttclient='[[mqttclient]]'></gost-datastreams>
-			<gost-observations name='observations'></gost-observations>
-			<gost-foi name='foi'></gost-foi>
-			<gost-mqttlog name='mqttlog' mqttclient='[[mqttclient]]'></gost-mqttlog>
-			<gost-myfirstsensor name='myfirstsensor' mqttclient='[[mqttclient]]'></gost-myfirstsensor>
-			<gost-thing name='thing'></gost-thing>
+          <div name='home'>Home</div>
+          <gost-things name='things'></gost-things>
+          <gost-locations name='locations'></gost-locations>
+          <gost-historicallocations name='historicallocations'></gost-historicallocations>
+          <gost-sensors name='sensors'></gost-sensors>
+          <gost-observedproperties name='observedproperties'></gost-observedproperties>
+          <gost-datastreams name='datastreams' mqttclient='[[mqttclient]]'></gost-datastreams>
+          <gost-observations name='observations'></gost-observations>
+          <gost-foi name='foi'></gost-foi>
+          <gost-mqttlog name='mqttlog' mqttclient='[[mqttclient]]'></gost-mqttlog>
+          <gost-myfirstsensor name='myfirstsensor' mqttclient='[[mqttclient]]'></gost-myfirstsensor>
+          <gost-thing name='thing'></gost-thing>
         </iron-pages>
       </app-header-layout>
     </app-drawer-layout>

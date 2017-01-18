@@ -1,29 +1,43 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
-
+<link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/gost-elements/gost-rest.html">
 <link rel="import" href="../bower_components/gost-elements/gost-table.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="gost-thing.html">
 
 <dom-module id="gost-things">
     <template>
+        <style>
 
+            paper-card {
+                display: inline-block;
+                background: white;
+                box-sizing: border-box;
+                margin: 16px;
+                padding: 16px;
+                border-radius: 2px;
+            }
+        </style>
     <gost-rest auto id='thingsrequest'
         requesturl='http://gost.geodan.nl/v1.0/Things'
         resultarray='{{thingsarray}}'
     ></gost-rest>
 
-    <gost-table id='thingstable'
-    	resultarray='[[thingsarray]]'
-    	columns='[[columns]]'>
-    </gost-table>
-    
+    <div class="card-content">
+        <gost-table id='thingstable'
+            resultarray='[[thingsarray]]'
+            columns='[[columns]]'>
+        </gost-table>
+    </div>
+
     <iron-collapse id='collapser'>
 		<gost-thing class="collapse-content" id='thingcontainer'
 			thing='[[thing]]'>
 		</gost-thing>
     </iron-collapse>
-    
+
     </template>
 </dom-module>
 
