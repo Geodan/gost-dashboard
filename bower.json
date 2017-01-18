@@ -18,12 +18,10 @@
     "polymer": "polymer/polymer#~1",
     "iron-elements": "~1",
     "paper-elements": "~1",
-    "gost-elements": "GeodanElements/gost-elements"
+    "gost-elements": "GeodanElements/gost-elements",
+    "mqtt-elements": "^0.0.6-beta"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"
-  },
-  "resolutions": {
-    "polymer": "^1.1.0"
   }
 }
