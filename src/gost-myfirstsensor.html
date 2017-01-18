@@ -1,11 +1,102 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/abdonrd/device-orientation.html">
 
 <dom-module id="gost-myfirstsensor">
     <template>
-    <div>Counter: [[counter]]</div>
-    <div>Published: [[published]]</div>
     
+    <style include="iron-flex"></style>
+    <style is='custom-style'>
+    	.next { color: var(--google-blue-500);}
+    	paper-card {
+    	  width: 100%;
+		}
+		.card-content {
+			height: 50%;
+		}
+
+    </style>
+    
+    <device-orientation orientation="{{orientation}}"></device-orientation>
+
+    
+    <paper-toolbar>
+     <div class="title">Add thing [[orientation.alpha]]</div>
+    </paper-toolbar>
+    
+    <div class='layout vertical'>
+    <iron-pages selected=[[page]]>
+		<paper-card heading="Create thing" >
+		  <div class="card-content">
+			<paper-input label="Name" value={{_thingName}}></paper-input>
+			<paper-input label="Description" value={{_thingDescription}}></paper-input>
+		  </div>
+		  <div class="card-actions">
+			<paper-button on-click='nextpage' class='next'>Next</paper-button>
+		  </div>
+		</paper-card>
+		
+		<paper-card heading="Location">
+		  <div class="card-content">
+			<paper-input label="Longitude" value={{_longitude}}></paper-input>
+			<paper-input label="Latitude" value={{_latitude}}></paper-input>
+		  </div>
+		  <div class="card-actions">
+			<paper-button on-click='prevpage'>Previous</paper-button><paper-button on-click='nextpage' class='next'>Next</paper-button>
+		  </div>
+		</paper-card>
+		
+		<paper-card heading="Obs. property">
+		  <div class="card-content">
+			<paper-input label="Name" value={{_obspropName}}></paper-input>
+			<paper-input label="Definition" value={{_obspropDef}}></paper-input>
+			<paper-input label="Description" value={{_obspropDesc}}></paper-input>
+		  </div>
+		  <div class="card-actions">
+			<paper-button on-click='prevpage'>Previous</paper-button><paper-button on-click='nextpage' class='next'>Next</paper-button>
+		  </div>
+		</paper-card>
+		
+		<paper-card heading="Sensor">
+		  <div class="card-content">
+			<paper-input label="Description" value={{_sensorDesc}}></paper-input>
+			<paper-input label="Encoding type" value={{_sensorEnc}}></paper-input>
+			<paper-input label="Metadata" value={{_sensorMeta}}></paper-input>
+		  </div>
+		  <div class="card-actions">
+			<paper-button on-click='prevpage'>Previous</paper-button><paper-button on-click='nextpage' class='next'>Next</paper-button>
+		  </div>
+		</paper-card>
+		
+		<paper-card heading="Datastream">
+		  <div class="card-content">
+		    <paper-input label="Name" value={{_dsName}}></paper-input>
+			<paper-input label="Description" value={{_dsDescription}}></paper-input>
+			<paper-input label="Observation type" value={{_dsObstype}}></paper-input>
+			Unit of measurement:
+			<paper-input label="Name"></paper-input>
+			<paper-input label="Symbol"></paper-input>
+			<paper-input label="Definition"></paper-input>
+		  </div>
+		  <div class="card-actions">
+			<paper-button on-click='prevpage'>Previous</paper-button><paper-button on-click='nextpage' class='next'>Next</paper-button>
+		  </div>
+		</paper-card>
+    </iron-pages>
+    
+     
+    <paper-textarea label="JSON" value={{data}}>
+    
+    </paper-textarea>
+    </div>
+    <!--
     <iron-ajax id='ajaxrequest'
     	auto
     	url = "http://gost.geodan.nl/v1.0/Observations"
@@ -17,25 +108,7 @@
     	on-error = "_handleerror"
     	verbose=true
     ></iron-ajax>
-    
-    <mqtt-connection id="connection" 
-    	
-	   connected="{{connected}}"
-	   client="[[mqttclient]]"
-	   >
-	  <!--
-	   <mqtt-publish
-        auto
-        retained
-        qos="1"
-        topic="Datastreams(10)/Observations"
-        payload="[[payload]]"
-        published="{{published}}"
-        on-mqtt-publication-published='_onpublished'
-        ></mqtt-publish>
-	   -->
-	 </mqtt-connection>
-        
+       -->
     </template>
 </dom-module>
 
@@ -47,23 +120,80 @@ Polymer({
         counter: {
         	type: Number,
         	value: 0
-        }
+        },
+        page: {
+        	type: Number,
+        	value: 0
+        },
+        _data: {
+        	type: Object,
+        	value: function(){
+        		return {
+					"name": "Tom's phone",
+					"description": "Tom's Mobile sensorplatform",
+					"properties": {},
+					"Locations": [{
+						"name": "withme",
+						"description": "Phone is in pocket",
+						"encodingType": "application/vnd.geo+json",
+						"location": {
+							"type": "Point",
+							"coordinates": []
+						}
+					}],
+					"Datastreams": [{
+						"name": "",
+						"unitOfMeasurement": {
+							"name": "Degrees",
+							"symbol": "deg.",
+							"definition": "http://www.qudt.org/qudt/owl/1.0.0/unit/Instances.html#DegreeAngle"
+						},
+						"description": "Measurement of phone inclination",
+						"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+						"ObservedProperty": {
+							"name": "Inclination",
+							"definition": "http://www.qudt.org/qudt/owl/1.0.0/quantity/Instances.html#Temperature",
+							"description": "Inclination of the phone relative to ground surface"
+						},
+						"Sensor": {
+							"name": "Rotation sensor",
+							"description": "Super Secret Sensor",
+							"encodingType": "application/pdf",
+							"metadata": "Calibration date:  Jan 1, 2014"
+						},
+						"Observations": [
+								{
+								  "phenomenonTime": new Date().toISOString(),
+								  "resultTime" : new Date().toISOString(),
+								  "result" : 0
+								}
+							]
+					}]
+				}
+			}
+		},
+		data: {
+			type: String
+		}
+			
+    },
+    observers: [
+    	'_renderData(_thingName, _thingDescription, _latitude, _longitude, _obspropName,_dsName,_dsDescription,_dsObstype)'
+    ],
+    _renderData: function(_thingName){
+    	this._data.name = _thingName;
+    	this._data.description = _thingDescription;
+    	this._data.Locations[0].location.coordinates = [this._latitude, this._longitude];
+    	this._data.Datastreams[0].name = _dsName;
+    	this._data.Datastreams[0].description = _dsDescription;
+    	this._data.Datastreams[0].observationType = _dsObstype;
+    	
+    	
+    	this.data = JSON.stringify(this._data);
+    	
     },
     ready: function(){
     	var self = this;
-    	window.setInterval(function(){
-    		self.counter += 1;
-    		if (self.counter > 10){
-    			self.counter = 0;
-    		}
-    		var now = new Date().toISOString();
-    		self.payload= {
-			  "phenomenonTime": now,
-			  "resultTime" : now,
-			  "result" : self.counter,
-			  "Datastream":{"@iot.id":10}
-			}
-    	},1000);
     	
     },
     _handleresponse: function(e,d){
@@ -74,6 +204,12 @@ Polymer({
     },
     _onpublished: function(e,d){
     	console.log(e.d);
+    },
+    nextpage: function(){
+    	this.page++;
+    },
+    prevpage: function(){
+    	this.page--;
     }
 
 });
