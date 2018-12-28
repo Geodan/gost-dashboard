@@ -1,20 +1,18 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 
 <dom-module id="gost-home">
-    <template>
+<template>
     HOME
-    </template>
-</dom-module>
+</template>
 
 <script>
 
-Polymer({
-    is: 'gost-home',
-    properties: {
-    
-    },
-    ready: function(){
-
+  class GostHome extends Polymer.Element {
+    static get is() { return 'gost-home'; }
+    static get properties(){
+        return null;
     }
-});
+  }
+  window.customElements.define(GostHome.is, GostHome);
 </script>
+</dom-module>

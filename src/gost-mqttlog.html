@@ -21,13 +21,13 @@
 	 </mqtt-connection>
         
     </template>
-</dom-module>
+
 
 <script>
 
-Polymer({
-    is: 'gost-mqttlog',
-    properties: {
+class GostMqttlog extends Polymer.Element {
+    static get is() {return 'gost-mqttlog'}
+    static get properties() {return  {
     	mqttclient: {
     		type: Object
     	},
@@ -35,16 +35,18 @@ Polymer({
         	type: Array,
         	observer: '_messagesChanged'
         }
-    },
-    observers: [
+    }}
+    static get observers() {return  [
     	
-    ],
-    ready: function(){
+    ]}
+    ready(){
     	
-    },
-    _messagesChanged: function(messages){
+    }
+    _messagesChanged(messages){
     	
     }
 
-});
+};
+window.customElements.define(GostMqttlog.is, GostMqttlog);
 </script>
+</dom-module>

@@ -37,35 +37,37 @@
 			thing='[[thing]]'>
 		</gost-thing>
     </iron-collapse>
-
-    </template>
-</dom-module>
-
+   </template>
 <script>
+class GostThings extends Polymer.Element {
+    static get is() { return 'gost-things'}
+    static get properties() {
+        return {
+            columns: {
+                type: Array,
+                value: function() {
+                    return [
+                        {title: 'ID',key: '@iot.id',type: Number},
+                        {title: 'Description',key: 'description',type: String},
+                        {title: 'Properties',key: 'properties',type: Object}
+                    ];
+                }
+            },
+            thing: {
+                type: Object
+            }
+        };
+    }
 
-Polymer({
-    is: 'gost-things',
-    properties: {
-        columns: {
-        	type: Array,
-        	value: function() {
-        		return [
-        			{title: 'ID',key: '@iot.id',type: Number},
-        			{title: 'Description',key: 'description',type: String},
-        			{title: 'Properties',key: 'properties',type: Object}
-        		];
-        	}
-        },
-        thing: {
-        	type: Object
-        }
-    },
-    ready: function(){
+    ready() {
+        super.ready();
     	var self = this;
     	this.$.thingstable.addEventListener('item-selected',function(d){
 			  self.thing = d.detail;
 			  self.$.collapser.show();
       	  });
     }
-});
+};
+window.customElements.define(GostThings.is, GostThings)
 </script>
+</dom-module>

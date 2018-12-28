@@ -143,11 +143,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
 
     <app-location route="{{route}}"></app-location>
-
+    <app-route
+        route="{{route}}"
+        pattern="[[rootPattern]]:page"
+        data="{{routeData}}"
+        tail="{{subroute}}"></app-route>
+<!--obsolete with 2.0
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}">
     </app-route>
     <app-route route="{{subroute}}" pattern="/:id" data="{{subrouteData}}">
     </app-route>
+-->
 
     <gost-mqtt id='mqtt' autoconnect hostname='gost.geodan.nl' connected='{{connected}}' client='{{mqttclient}}' subscriptions='{{subscriptions}}'
       on-message='_handleMqttMessage'></gost-mqtt>
@@ -155,7 +161,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <app-drawer-layout fullbleed>
 
       <!-- Drawer content -->
-      <app-drawer>
+      <app-drawer id="drawer" slot="drawer">
         <app-toolbar>
           <paper-icon-item>
             <iron-icon class="gost-toolbar-icon" src='../images/app-icon.svg' item-icon></iron-icon>
@@ -195,14 +201,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <!-- Main content -->
       <app-header-layout has-scrolling-region>
 
-        <app-header condenses reveals effects="waterfall">
+        <app-header slot="header" condenses reveals effects="waterfall">
           <app-toolbar>
             <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
-            <div title clas='page-title'>[[page]] [[lastmessage]]</div>
+            <div title class='page-title'>[[page]] [[lastmessage]]</div>
           </app-toolbar>
         </app-header>
 
-        <iron-pages role="main" selected="[[page]]" attr-for-selected="name">
+        <iron-pages 
+           role="main" 
+           selected="[[page]]" 
+           attr-for-selected="name"
+           fallback-selection="view404">
           <div name='home'>Home</div>
           <gost-things name='things'></gost-things>
           <gost-locations name='locations'></gost-locations>
@@ -221,72 +231,93 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </template>
 
   <script>
+    class GostMain extends Polymer.Element {
+      static get is() { return 'gost-main';}
+      static get properties() {
+        return {
+          page: {
+            type: String,
+            reflectToAttribute: true,
+            observer: '_pageChanged'
+          },
+          rootPattern: String,
+          routeData: Object,
+          subroute: String,
+          id: {
+            type: Number,
+            reflectToAttribute: true,
+            observer: '_idChanged'
+          },
+          menuitems: {
+              type: Array,
+              value: function(){
+                  return [
+                  {ref: 'home',name: 'Home', icon: 'home'},
+                  {ref: 'things',name: 'Things', icon: 'icons:toll'},
+                  {ref: 'locations',name: 'Locations', icon:'communication:location-on' },
+                  {ref: 'historicallocations',name: 'Historical Locations', icon: 'icons:update'},
+                  {ref: 'sensors',name: 'Sensors', icon: 'notification:network-check'},
+                  {ref: 'observedproperties',name: 'Observed Properties', icon: 'icons:list'},
+                  {ref: 'datastreams',name: 'Datastreams', icon: 'icons:trending-up'},
+                  {ref: 'observations',name: 'Observations', icon: 'image:remove-red-eye'},
+                  {ref: 'foi',name: 'Features of Interest', icon: 'maps:map'}
+                  ];
+              }
+          },
+          topics: {
+            type: Array
+          }
+      }
+      }
+      static get observers() {
+        return [
+          '_routePageChanged(routeData.page)',
+          '_routeIdChanged(subrouteData.id)'
+        ];
+      }
+      constructor() {
+        super();
 
-    Polymer({
-
-      is: 'gost-main',
-
-      properties: {
-
-        page: {
-          type: String,
-          reflectToAttribute: true,
-          observer: '_pageChanged'
-        },
-        id: {
-        	type: Number,
-        	reflectToAttribute: true,
-        	observer: '_idChanged'
-        },
-        menuitems: {
-            type: Array,
-            value: function(){
-                return [
-                {ref: 'home',name: 'Home', icon: 'home'},
-                {ref: 'things',name: 'Things', icon: 'icons:toll'},
-                {ref: 'locations',name: 'Locations', icon:'communication:location-on' },
-                {ref: 'historicallocations',name: 'Historical Locations', icon: 'icons:update'},
-                {ref: 'sensors',name: 'Sensors', icon: 'notification:network-check'},
-                {ref: 'observedproperties',name: 'Observed Properties', icon: 'icons:list'},
-                {ref: 'datastreams',name: 'Datastreams', icon: 'icons:trending-up'},
-                {ref: 'observations',name: 'Observations', icon: 'image:remove-red-eye'},
-                {ref: 'foi',name: 'Features of Interest', icon: 'maps:map'}
-                ];
-            }
-        },
-        topics: {
-        	type: Array
-        }
-
-      },
-      
-      observers: [
-        '_routePageChanged(routeData.page)',
-        '_routeIdChanged(subrouteData.id)',
-      ],
-      ready: function(){
-      },
-      _handleMqttMessage: function(e,message){
+        // Get root pattern for app-route, for more info about `rootPath` see:
+        // https://www.polymer-project.org/2.0/docs/upgrade#urls-in-templates
+        this.rootPattern = (new URL(this.rootPath)).pathname;
+      }
+      _handleMqttMessage(e,message){
       	  	  //console.log(message);
-      },
-      _routePageChanged: function(page) {
+      }
+      _routePageChanged(page) {
+        // Polymer 2.0 will call with `undefined` on initialization.
+        // Ignore until we are properly called with a string.
+        if (page === undefined) {
+          return;
+        }
         this.page = page || 'home';
-      },
-      _routeIdChanged: function(id) {
+        // Close a non-persistent drawer when the page & route are changed.
+        if (!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
+      }
+      _routeIdChanged(id) {
         this.id = id || null;
-      },
-
-      _pageChanged: function(page) {
-        // load page import on demand.
-        this.importHref(
-          this.resolveUrl('gost-' + page + '.html'), null, null, true);
-      },
-      _idChanged: function(id){
-      	  //console.log('id is ' ,id);
       }
 
-    });
-
+      _pageChanged(page) {
+        var resolvedPageUrl = this.resolveUrl('gost-' + page + '.html');
+        // load page import on demand.
+        Polymer.importHref(
+           resolvedPageUrl,
+            null,
+            this._showPage404.bind(this),
+            true);
+      }
+      _idChanged(id){
+      	  //console.log('id is ' ,id);
+      }
+      _showPage404() {
+        this.page = 'view404';
+      }
+    }
+    window.customElements.define(GostMain.is, GostMain);
   </script>
 
 </dom-module>

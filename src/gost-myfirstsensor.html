@@ -27,10 +27,11 @@
     <device-orientation orientation="{{orientation}}"></device-orientation>
 
     <!-- UI part -->
-    <paper-toolbar>
-     <div class="title">Add thing [[orientation.alpha]]</div>
-    </paper-toolbar>
-    
+		<app-header reveals>
+    <app-toolbar>
+     <div main-title>Add thing [[orientation.alpha]]</div>
+    </app-toolbar>
+		</app-header>
     <div class='layout vertical'>
     <iron-pages selected=[[page]]>
 		<paper-card heading="Create thing" >
@@ -110,13 +111,14 @@
     ></iron-ajax>
        -->
     </template>
-</dom-module>
+
 
 <script>
 
-Polymer({
-    is: 'gost-myfirstsensor',
-    properties: {
+class GostMyfirstsensor extends Polymer.Element {
+    static get is() {return 'gost-myfirstsensor'}
+    static get properties() {
+			return {
         counter: {
         	type: Number,
         	value: 0
@@ -175,12 +177,11 @@ Polymer({
 		data: {
 			type: String
 		}
-			
-    },
-    observers: [
+    }}
+    static get observers(){return  [
     	'_renderData(_thingName, _thingDescription, _latitude, _longitude, _obspropName,_dsName,_dsDescription,_dsObstype)'
-    ],
-    _renderData: function(_thingName){
+    ]}
+    _renderData(_thingName){
     	this._data.name = _thingName;
     	this._data.description = _thingDescription;
     	this._data.Locations[0].location.coordinates = [this._latitude, this._longitude];
@@ -191,26 +192,29 @@ Polymer({
     	
     	this.data = JSON.stringify(this._data);
     	
-    },
-    ready: function(){
+    }
+    ready(){
+			super.ready();
     	var self = this;
     	
-    },
-    _handleresponse: function(e,d){
+    }
+    _handleresponse(e,d){
     	console.log(e.d);
-    },
-    _handleerror: function(e,d){
+    }
+    _handleerror(e,d){
     	console.log(e.d);
-    },
-    _onpublished: function(e,d){
+    }
+    _onpublished(e,d){
     	console.log(e.d);
-    },
-    nextpage: function(){
+    }
+    nextpage(){
     	this.page++;
-    },
-    prevpage: function(){
+    }
+    prevpage(){
     	this.page--;
     }
 
-});
+};
+window.customElements.define(GostMyfirstsensor.is, GostMyfirstsensor);
 </script>
+</dom-module>

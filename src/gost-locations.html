@@ -23,13 +23,13 @@
     </gost-table>
     
     </template>
-</dom-module>
+
 
 <script>
+class GostLocations extends Polymer.Element {
 
-Polymer({
-    is: 'gost-locations',
-    properties: {
+    static get is() {return 'gost-locations'}
+    static get properties() {return {
         columns: {
         	type: Array,
         	value: function() {
@@ -41,10 +41,9 @@ Polymer({
         		];
         	}
         }
-    },
-    ready: function(){
-
     }
-
-});
+    }
+};
+window.customElements.define(GostLocations.is, GostLocations);
 </script>
+</dom-module>

@@ -26,13 +26,13 @@
 		
     </iron-collapse>
     </template>
-</dom-module>
+
 
 <script>
 
-Polymer({
-    is: 'gost-datastreams',
-    properties: {
+class GostDatastreams extends Polymer.Element {
+    static get is() {return 'gost-datastreams'}
+    static get properties() {return {
         columns: {
         	type: Array,
         	value: function() {
@@ -44,9 +44,10 @@ Polymer({
         		];
         	}
         }
-        
-    },
-    ready: function(){
+	}
+    }
+    ready(){
+		super.ready();
     	var self = this;
     	this.$.table.addEventListener('item-selected',function(d){
 			  self.stream = d.detail;
@@ -54,5 +55,7 @@ Polymer({
       	  });
     	}
 
-});
+};
+window.customElements.define(GostDatastreams.is, GostDatastreams);
 </script>
+</dom-module>

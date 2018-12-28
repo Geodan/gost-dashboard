@@ -59,71 +59,72 @@
 	  </div>
 	 </iron-pages>
    </template>
-</dom-module>
+
 
 <script>
+class GostThing extends Polymer.Element {
 
-Polymer({
-    is: 'gost-thing',
-    properties: {
-        id: {
-        	type: Number
-        },
-        thing: {
-        	type: Object,
-        	observer: '_thingChanged'
-        },
-        tab: {
-        	type: Number,
-        	value: 0
-        },
-        dscolumns: {
-        	type: Array,
-        	value: function() {
-        		return [
-        			{title: 'ID',key: '@iot.id',type: Number},
-        			{title: 'Description',key: 'description',type: String},
-        			{title: 'Unit of Measurement',key: 'unitOfMeasurement',type: Object},
-        			{title: 'Observationtype',key: 'observationType',type: String},
-        			
-        		];
-        	}
-        },
-        loccolumns: {
-        	type: Array,
-        	value: function() {
-        		return [
-        			{title: 'ID',key: '@iot.id',type: Number},
-        			{title: 'Description',key: 'description',type: String},
-        			{title: 'Encoding',key: 'encodingType',type: String},
-        			{title: 'location',key: 'location',type: Object},
-        		];
-        	}
-        },
-        hlcolumns: {
-        	type: Array,
-        	value: function() {
-        		return [
-        			{title: 'ID',key: '@iot.id',type: Number},
-        			{title: 'Time',key: 'time',type: String}
-        		];
-        	}
-        }
-    },
-    ready: function(){
-
-    },
-    _thingChanged: function(thing){
+    static get is() {return  'gost-thing'}
+    static get properties() {
+		return {
+			id: {
+				type: Number
+			},
+			thing: {
+				type: Object,
+				observer: '_thingChanged'
+			},
+			tab: {
+				type: Number,
+				value: 0
+			},
+			dscolumns: {
+				type: Array,
+				value: function() {
+					return [
+						{title: 'ID',key: '@iot.id',type: Number},
+						{title: 'Description',key: 'description',type: String},
+						{title: 'Unit of Measurement',key: 'unitOfMeasurement',type: Object},
+						{title: 'Observationtype',key: 'observationType',type: String},
+						
+					];
+				}
+			},
+			loccolumns: {
+				type: Array,
+				value: function() {
+					return [
+						{title: 'ID',key: '@iot.id',type: Number},
+						{title: 'Description',key: 'description',type: String},
+						{title: 'Encoding',key: 'encodingType',type: String},
+						{title: 'location',key: 'location',type: Object},
+					];
+				}
+			},
+			hlcolumns: {
+				type: Array,
+				value: function() {
+					return [
+						{title: 'ID',key: '@iot.id',type: Number},
+						{title: 'Time',key: 'time',type: String}
+					];
+				}
+			}
+		};
+    }
+    
+    _thingChanged(thing){
     	this.datastreamsurl = thing['Datastreams@iot.navigationLink'];
 		this.histlocationsurl = thing['HistoricalLocations@iot.navigationLink'];
 		this.locationsurl = thing['Locations@iot.navigationLink'];
-	},
-	getId: function(thing){
+	}
+	getId(thing){
 		return thing['@iot.id'];
-	},
-	stringify: function(obj){
+	}
+	stringify(obj){
 		return JSON.stringify(obj);
 	}
-
-});
+};
+window.customElements.define(GostThing.is,GostThing);
 </script>
+</dom-module>

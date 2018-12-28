@@ -13,14 +13,10 @@
 
 <script>
 
-Polymer({
-    is: 'gost-foi',
-    properties: {
-        
-    },
-    ready: function(){
+class GostFoi extends Polymer.Element {
+    static get is() {return 'gost-foi';}
+    
 
-    }
-
-});
+};
+window.customElements.define(GostFoi.is, GostFoi);
 </script>

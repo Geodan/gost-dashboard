@@ -90,13 +90,13 @@
 	  </div>
 	 </iron-pages>
    </template>
-</dom-module>
+
 
 <script>
 
-Polymer({
-    is: 'gost-datastream',
-    properties: {
+class GostDatastream extends Polymer.Element {
+    static get is() {return 'gost-datastream'}
+    static get properties() {return  {
         id: {
         	type: Number
         },
@@ -113,28 +113,28 @@ Polymer({
         	type: Array,
         	notify: true
         }
-    },
-    ready: function(){
-
-    },
-    _streamChanged: function(stream){
+    }}
+    
+    _streamChanged(stream){
     	this.thingurl = stream['Thing@iot.navigationLink'];
 		this.sensorurl = stream['Sensor@iot.navigationLink'];
 		this.observationsurl = stream['Observations@iot.navigationLink'] + '?$top=40';
 		this.observedpropertyurl = stream['ObservedProperty@iot.navigationLink'];
-	},
-	getId: function(thing){
+	}
+	getId(thing){
 		return thing['@iot.id'];
-	},
-	getTopic: function(thing){
+	}
+	getTopic(thing){
 		return 'Datastreams('+this.getId(thing)+')/Observations';
-	},
-	stringify: function(obj){
+	}
+	stringify(obj){
 		return JSON.stringify(obj);
-	},
-	_messagesChanged: function(messages){
+	}
+	_messagesChanged(messages){
 		debugger;
 	}
 
-});
+};
+window.customElements.define(GostDatastream.is, GostDatastream);
 </script>
+</dom-module>

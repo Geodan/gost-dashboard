@@ -1,15 +1,26 @@
 {
   "name": "gost-dashboard",
-  "authors": [
-    "Geodan"
-  ],
-  "private": true,
+  "description": "Basic dashboard for GOST sensors",
+  "main": "index.html",
   "dependencies": {
-    "polymer": "Polymer#^1.7.1",
-    "iron-elements": "~1",
-    "paper-elements": "~1",
-    "app-elements": "^0.10.1",
-    "mappu-elements": "geodanElements/mappu-elements#^0.0.3"
+    "polymer": "~2",
+    "app-route": "PolymerElements/app-route#v2.0.0",
+    "app-layout": "PolymerElements/app-layout#v2.0.0",
+    "paper-icon-button": "v2.0.0",
+    "paper-item": "v2.0.0",
+    "iron-icons": "v2.0.0",
+    "iron-pages": "v2.0.0",
+    "iron-selector": "v2.0.0",
+    "iron-collapse": "v2.0.0",
+    "paper-tabs": "v2.0.0",
+    "paper-card": "PolymerElements/paper-card#v2.0.0",
+    "iron-ajax": "v2.0.0",
+    "paper-toolbar": "PolymerElements/paper-toolbar#v2.0.0",
+    "paper-input": "PolymerElements/paper-input#v2.0.0",
+    "paper-button": "PolymerElements/paper-button#v2.0.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "web-component-tester": "Polymer/web-component-tester#^6.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
+  }
 }
